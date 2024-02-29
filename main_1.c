@@ -69,7 +69,7 @@ char   **get_input(char *input)
 
     while ((*input == '\n') || (*input == ' ') || (*input == '\t'))
         input++;
-    printf("[debug] Input: %s\n", input);
+    // printf("[debug] Input: %s\n", input);
     command = malloc(sizeof(char*) * 8);
     parsed = strtok(input, separator);
     index = 0;

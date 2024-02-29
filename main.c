@@ -16,6 +16,7 @@ void        m_exit(char*);
 void        print_cmd(char**);
 char        *get_input(void);
 void        exec_cmd(char**);
+int         cd(char*);
 
 
 int     main(void)
@@ -34,6 +35,12 @@ int     main(void)
             exit(EXIT_SUCCESS);
         }
         cmd = get_tokens(input);
+        if (strcmp(cmd[0], "cd") == 0)
+        {
+            if (cd(cmd[1]) != 0)
+                perror(strerror(errno));
+            continue;
+        }
         exec_cmd(cmd);
     }
     free(input);
@@ -73,15 +80,17 @@ void        exec_cmd(char **cmd)
     {
         if ((execvp(cmd[0], cmd)) < 0)
         {
-            perror(cmd[0]);
-            return;
+            perror(strerror(errno));
+            printf("[debug] execvp erro %d\n", errno);
+            exit(errno);
         }
     }
     if (waitpid(pid, &status, 0) < 0)
     {
-        perror(cmd[0]);
+        perror(strerror(errno));
         return;
     }
+    // printf("waitpid status => %d\n", status);
 }
 
 
@@ -123,6 +132,11 @@ char        **get_tokens(char *input)
     }
     tokens[i] = NULL;
     return (tokens);
+}
+
+int     cd(char *path)
+{
+    return chdir(path);
 }
 
 void            m_exit(char *msg)
