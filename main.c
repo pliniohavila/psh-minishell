@@ -15,6 +15,7 @@ int         get_qtd_tokens(char*);
 void        m_exit(char*);
 void        print_cmd(char**);
 char        *get_input(void);
+char        **get_inputs(char*);
 void        exec_cmd(char**);
 int         cd(char*);
 
@@ -22,7 +23,9 @@ int         cd(char*);
 int     main(void)
 {
     char        *input;
+    char        **inputs;
     char        **cmd;
+    int         i;
 
     while (1) 
     {
@@ -34,17 +37,29 @@ int     main(void)
             free(input);
             exit(EXIT_SUCCESS);
         }
-        cmd = get_tokens(input);
-        if (strcmp(cmd[0], "cd") == 0)
+        inputs = get_inputs(input);
+        // print_cmd(inputs);
+        i = 0;
+        while (inputs[i] != NULL)
         {
-            if (cd(cmd[1]) != 0)
-                perror(strerror(errno));
-            continue;
+            cmd = get_tokens(inputs[i]);
+            // print_cmd(cmd);
+            if (strcmp(cmd[0], "cd") == 0)
+            {
+                 if (cd(cmd[1]) != 0)
+                    perror(strerror(errno));
+            }
+            else 
+                exec_cmd(cmd);
+            free(cmd);
+            i++;
         }
-        exec_cmd(cmd);
+        free(input);
+        free(inputs);
     }
-    free(input);
-    free(cmd);
+    // free(input);
+    // free(inputs);
+    // free(cmd);
     return (EXIT_SUCCESS);
 }
 
@@ -64,6 +79,32 @@ char        *get_input(void)
         exit(EXIT_SUCCESS);
     }
     return (input);
+}
+
+char        **get_inputs(char *input)
+{
+    char        **vec_inputs;
+    char        *input_parsed;
+    int         i;
+    int         l;
+
+    vec_inputs = calloc(sizeof(char*), 6);
+    assert(vec_inputs != NULL);
+    i = 0;
+    l = 0;
+    input_parsed = strtok(input, ";");
+    while ((input_parsed != NULL) && (i < 5))
+    {
+        while (*input_parsed == ' ')
+            input_parsed++;
+        l = strlen(input_parsed);
+        input_parsed[l] = '\0';
+        vec_inputs[i] = input_parsed;
+        input_parsed = strtok(NULL, ";");
+        i++;
+    }
+    vec_inputs[i] = NULL;
+    return (vec_inputs);
 }
 
 void        exec_cmd(char **cmd)
