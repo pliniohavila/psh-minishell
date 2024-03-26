@@ -6,10 +6,10 @@ REDL	= -lreadline
 
 
 all:
-	$(CC) $(FLAGS) main.c -o main
+	$(CC) $(FLAGS) $(REDL) helpers.c parser.c main.c -o psh
 
 sanit:
-	$(CC) $(FLAGS) $(SANIT) main.c -o main
+	$(CC) $(FLAGS) $(SANIT) main.c -o psh
 
 
 run:
