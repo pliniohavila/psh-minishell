@@ -101,7 +101,6 @@ char        **get_tokens(char *input)
     int         qtd_tokens;
     int         i;
    
-
     while ((*input == ' ') || (*input == '\t'))
         input++;
     qtd_tokens = get_qtd_tokens(input);

@@ -66,16 +66,17 @@ void        pipeline(char **primitive_tokens)
     assert(commands != NULL);
     free(primitive_tokens);
 
-    // printf("\n[DEBUG SHOW COMMANDS]\n");
-    // while (commands[i].cmd != NULL)
-    // {
-    //     printf("bin: ");
-    //     print_cmd(commands[i].cmd);
-    //     printf("\tPipe: %d - INFILE: %d - OUTFILE: %d - infile: %s - outfile %s\n",
-    //         commands[i].PIPE, commands[i].INFILE, commands[i].OUTFILE, commands[i].infile, commands[i].outfile);
-    //     i++;
-    // }
-    // printf("\n\n");
+    printf("\n[DEBUG SHOW COMMANDS]\n");
+    while (commands[i].cmd != NULL)
+    {
+        printf("bin: ");
+        print_cmd(commands[i].cmd);
+        printf("\tPipe: %d - INFILE: %d - OUTFILE: %d - infile: %s - outfile %s\n",
+            commands[i].PIPE, commands[i].INFILE, commands[i].OUTFILE, commands[i].infile, commands[i].outfile);
+        i++;
+    }
+    printf("Here\n");
+    printf("\n\n");
     i = 0;
     while (commands[i].cmd != NULL)
     {
@@ -137,79 +138,4 @@ CMD_S       init_command_s(char *input)
     command.infile = NULL;
     command.outfile = NULL;
     return (command);
-}
-
-// int         main(void)
-// {
-//     // char    str[] = "cat < ls.log | rev | nl > nl.log";
-//     // char    str[] = "cat < ls.log ";
-//     char    str[] = "cat < ls.log | rev | nl > nl.log";
-//     char    **primitive_tokens;
-
-//     primitive_tokens = parser(str);
-//     pipeline(primitive_tokens);
-//     return (0);
-// }
-
-void        free_commands(CMD_S commands[]) 
-{
-    int     i;
-
-    i = 0;
-    while (commands[i].cmd != NULL)
-    {
-        free_tokens(commands[i].cmd);
-        free_redirects(commands[i].infile);
-        free_redirects(commands[i].outfile);
-        i++;
-    }
-}
-
-void        free_primitive_tokens(char **primitive_tokens)
-{
-    int     i;
-
-    i = 0;
-    while(primitive_tokens[i] != NULL)
-        free(primitive_tokens[i++]);
-}
-
-void        free_tokens(char **tokens)
-{
-    int         i;
-
-    if (tokens != NULL) 
-    {
-        i = 0;
-        while (tokens[i] != NULL) 
-        {
-            free(tokens[i]);
-            i++;
-        }
-        free(tokens);
-    }
-}
-
-void        free_redirects(char *redirect)
-{
-    if (redirect)
-        free(redirect);
-}
-
-void        error_exit(char *msg)
-{
-    printf("[debug] %s\n", msg);
-    exit(EXIT_SUCCESS);
-}
-
-void        print_cmd(char **cmd)
-{
-    int         i;
-    
-    i = 0;
-    while (cmd[i])
-    {
-        printf("%s ", cmd[i]);
-        i++;
-    }
 }

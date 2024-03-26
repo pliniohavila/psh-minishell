@@ -17,3 +17,49 @@ char        *get_input(void)
     }
     return (input);
 }
+
+
+void        free_commands(CMD_S commands[]) 
+{
+    int     i;
+
+    i = 0;
+    while (commands[i].cmd != NULL)
+    {
+        free_tokens(commands[i].cmd);
+        free_redirects(commands[i].infile);
+        free_redirects(commands[i].outfile);
+        i++;
+    }
+}
+
+void        free_primitive_tokens(char **primitive_tokens)
+{
+    int     i;
+
+    i = 0;
+    while(primitive_tokens[i] != NULL)
+        free(primitive_tokens[i++]);
+}
+
+void        free_tokens(char **tokens)
+{
+    int         i;
+
+    if (tokens != NULL) 
+    {
+        i = 0;
+        while (tokens[i] != NULL) 
+        {
+            free(tokens[i]);
+            i++;
+        }
+        free(tokens);
+    }
+}
+
+void        free_redirects(char *redirect)
+{
+    if (redirect)
+        free(redirect);
+}

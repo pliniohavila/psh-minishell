@@ -10,6 +10,7 @@
 
 #include "helpers.h"
 #include "parser.h"
+#include "pipeline.h"
 
 void        exec_cmd(char**);
 int         cd(char*);
@@ -18,6 +19,7 @@ int     main(void)
 {
     char        *input;
     char        **inputs;
+    char        **primitive_tokens;
     char        **cmd;
     int         i;
 
@@ -29,24 +31,25 @@ int     main(void)
             free(input);
             exit(EXIT_SUCCESS);
         }
-        inputs = get_inputs(input);
+        inputs = get_inputs(input); // separate by ';'
         i = 0;
         while (inputs[i] != NULL)
         {
-            cmd = get_tokens(inputs[i]);
-            // print_cmd(cmd);
-            if (strcmp(cmd[0], "cd") == 0)
-            {
-                 if (cd(cmd[1]) != 0)
+            if ((inputs[i][0] == 'c') && inputs[i][1] == 'd')
+            { 
+                  cmd = get_tokens(inputs[i]); // {"ls", "-l", "-r"}
+                  if (cd(cmd[1]) != 0)
                     perror(strerror(errno));
             }
             else 
-                exec_cmd(cmd); // The pipeline will replaces this call
-            free(cmd); // pipeline will free
+            {
+                primitive_tokens = parser(inputs[i]);
+                print_cmd(primitive_tokens);
+                pipeline(primitive_tokens); 
+            }
             i++;
         }
         free(input);
-        free(inputs); // pipeline will free
     }
     return (EXIT_SUCCESS);
 }

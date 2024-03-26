@@ -14,9 +14,9 @@ void        print_cmd(char **cmd)
     int         i;
     
     i = 0;
-    while (cmd[i])
+    while (cmd[i] != NULL)
     {
-        printf("[debug] cmd[%d] = %s\n", i, cmd[i]);
+        printf("cmd[%d] -%s-\n", i, cmd[i]);
         i++;
     }
 }
